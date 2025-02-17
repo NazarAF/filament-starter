@@ -5,7 +5,6 @@ pipeline {
         DOCKER_IMAGE = 'laravel-filament-starter'
         DOCKER_REGISTRY = 'docker.io'
         DOCKER_TAG = "latest"
-        MYSQL_CONTAINER = 'laravel-mysql'
     }
 
     stages {
@@ -15,12 +14,10 @@ pipeline {
             }
         }
 
-        stage('Run MySQL Container') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    sh """
-                    docker run -d --name ${MYSQL_CONTAINER} -e MYSQL_DATABASE=laravel -e MYSQL_USER=user -e MYSQL_PASSWORD= -e MYSQL_ROOT_PASSWORD= -p 3306:3306 mysql:8
-                    """
+                    sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
                 }
             }
         }
@@ -29,8 +26,17 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d -p 8000:8000 --name laravel-container --link ${MYSQL_CONTAINER}:mysql ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8000"
+                    docker run -d -p 8000:8000 --name laravel-container ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8000"
                     """
+                }
+            }
+        }
+
+        stage('Run Migrations and Seed') {
+            steps {
+                script {
+                    sh 'docker exec laravel-container php artisan migrate --force'
+                    sh 'docker exec laravel-container php artisan db:seed --force'
                 }
             }
         }
@@ -57,8 +63,8 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    sh 'docker stop laravel-container ${MYSQL_CONTAINER}'
-                    sh 'docker rm laravel-container ${MYSQL_CONTAINER}'
+                    sh 'docker stop laravel-container'
+                    sh 'docker rm laravel-container'
                 }
             }
         }
