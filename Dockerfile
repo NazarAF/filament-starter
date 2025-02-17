@@ -2,7 +2,7 @@
 FROM php:8.2-cli
 
 # Install necessary PHP extensions (like PDO and MySQL)
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git libmysqlclient-dev \
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git libmariadb-dev-compat \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql
 
