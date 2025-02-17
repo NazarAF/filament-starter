@@ -18,6 +18,9 @@ COPY . /var/www/html
 # Install Laravel dependencies with Composer
 RUN composer install --no-interaction --prefer-dist
 
+# Run migrations and seed the database
+RUN php artisan migrate:fresh --seed
+
 # Expose port 8000 for the Laravel server
 EXPOSE 8000
 
