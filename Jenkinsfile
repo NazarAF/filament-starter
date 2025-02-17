@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/NazarAF/jenkins_test.git'
+                git 'https://github.com/NazarAF/filament-starter.git'
             }
         }
 
