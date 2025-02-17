@@ -1,10 +1,12 @@
 # Use PHP 8.2 CLI image
 FROM php:8.2-cli
 
-# Install necessary PHP extensions (like PDO and MySQL)
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git libmariadb-dev-compat \
+# Install necessary PHP extensions (like PDO, MySQL, intl, zip, etc.)
+RUN apt-get update && apt-get install -y \
+    libpng-dev libjpeg-dev libfreetype6-dev zip git libmariadb-dev-compat libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    && docker-php-ext-install gd pdo pdo_mysql intl zip \
+    && apt-get clean
 
 # Install Composer for managing PHP dependencies
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
