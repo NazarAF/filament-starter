@@ -1,0 +1,25 @@
+# Use PHP 8.2 CLI image
+FROM php:8.2-cli
+
+# Install necessary PHP extensions (like PDO and MySQL)
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git libmysqlclient-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_mysql
+
+# Install Composer for managing PHP dependencies
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Set working directory inside the container
+WORKDIR /var/www/html
+
+# Copy the Laravel application files into the container
+COPY . /var/www/html
+
+# Install Laravel dependencies with Composer
+RUN composer install --no-interaction --prefer-dist
+
+# Expose port 8000 for the Laravel server
+EXPOSE 8000
+
+# Run the Laravel server with php artisan serve
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
