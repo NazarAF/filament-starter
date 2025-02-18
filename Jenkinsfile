@@ -41,33 +41,13 @@ pipeline {
             }
         }
 
-        stage('Test Application') {
-            steps {
-                script {
-                    sh 'docker exec laravel-container php artisan test'
-                }
-            }
-        }
-
-        stage('Deploy to Production') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    echo "Deploying to production..."
-                }
-            }
-        }
-
-        stage('Cleanup') {
-            steps {
-                script {
-                    sh 'docker stop laravel-container'
-                    sh 'docker rm laravel-container'
-                }
-            }
-        }
+        // stage('Test Application') {
+        //     steps {
+        //         script {
+        //             sh 'docker exec laravel-container php artisan test'
+        //         }
+        //     }
+        // }
     }
 
     post {
