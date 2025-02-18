@@ -5,6 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'laravel-filament-starter'
         DOCKER_REGISTRY = 'docker.io'
         DOCKER_TAG = "latest"
+        CONTAINER_NAME = "laravel-filament"
     }
 
     stages {
@@ -26,7 +27,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d -p 8000:8000 --name laravel-container ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8083"
+                    docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8083"
                     """
                 }
             }
