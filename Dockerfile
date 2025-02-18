@@ -9,14 +9,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd pdo pdo_mysql intl zip \
     && apt-get clean
 
+# Install Composer for managing PHP dependencies
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
 # Copy the Laravel application files into the container
 COPY . /var/www/html
 
-# Use Composer from the VPS (bind mount required)
-RUN /usr/local/bin/composer install --no-interaction --prefer-dist
+# Install Laravel dependencies with Composer
+RUN composer install --no-interaction --prefer-dist
 
 # Run database migrations and seed the database
 RUN php artisan migrate:fresh --seed
