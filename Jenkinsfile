@@ -4,8 +4,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'laravel-filament-starter'
         DOCKER_REGISTRY = 'docker.io'
-        DOCKER_TAG = "latest"
-        CONTAINER_NAME = "laravel-filament"
+        DOCKER_TAG = 'latest'
+        CONTAINER_NAME = 'laravel-filament'
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 }
             }
         }
@@ -27,7 +27,9 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d -p 8083:8083 --name ${CONTAINER_NAME} ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8083"
+                    docker run -d -p 8083:8083 --name ${CONTAINER_NAME} \\
+                    ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} \\
+                    bash -c "php artisan serve --host=0.0.0.0 --port=8083"
                     """
                 }
             }
@@ -36,8 +38,8 @@ pipeline {
         stage('Run Migrations and Seed') {
             steps {
                 script {
-                    sh 'docker exec laravel-container php artisan migrate --force'
-                    sh 'docker exec laravel-container php artisan db:seed --force'
+                    sh "docker exec ${CONTAINER_NAME} php artisan migrate --force"
+                    sh "docker exec ${CONTAINER_NAME} php artisan db:seed --force"
                 }
             }
         }
@@ -45,7 +47,7 @@ pipeline {
         // stage('Test Application') {
         //     steps {
         //         script {
-        //             sh 'docker exec laravel-container php artisan test'
+        //             sh "docker exec ${CONTAINER_NAME} php artisan test"
         //         }
         //     }
         // }
@@ -53,16 +55,16 @@ pipeline {
 
     post {
         // always {
-        //     echo "Cleaning up docker containers"
+        //     echo 'Cleaning up Docker containers'
         //     sh 'docker system prune -f'
         // }
 
         success {
-            echo "Pipeline succeeded!"
+            echo 'Pipeline succeeded!'
         }
 
         failure {
-            echo "Pipeline failed!"
+            echo 'Pipeline failed!'
         }
     }
 }
