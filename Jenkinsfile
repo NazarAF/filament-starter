@@ -38,8 +38,7 @@ pipeline {
         stage('Run Migrations and Seed') {
             steps {
                 script {
-                    sh "docker exec ${CONTAINER_NAME} php artisan migrate --force"
-                    sh "docker exec ${CONTAINER_NAME} php artisan db:seed --force"
+                    sh "docker exec ${CONTAINER_NAME} php artisan migrate:fresh --seed"
                 }
             }
         }
