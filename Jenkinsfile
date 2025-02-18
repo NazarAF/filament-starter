@@ -43,27 +43,26 @@ pipeline {
             }
         }
 
-        // stage('Test Application') {
-        //     steps {
-        //         script {
-        //             sh "docker exec ${CONTAINER_NAME} php artisan test"
-        //         }
-        //     }
-        // }
+        stage('Run Test') {
+            steps {
+                script {
+                    sh "docker exec ${CONTAINER_NAME} php artisan test"
+                }
+            }
+        }
     }
 
     post {
-        // always {
-        //     echo 'Cleaning up Docker containers'
-        //     sh 'docker system prune -f'
-        // }
-
         success {
             echo 'Pipeline succeeded!'
         }
 
         failure {
             echo 'Pipeline failed!'
+            echo 'Cleaning up Docker containers'
+            sh "docker stop ${CONTAINER_NAME} || true"
+            sh "docker rm ${CONTAINER_NAME} || true"
+            sh 'docker system prune -f'
         }
     }
 }
