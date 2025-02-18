@@ -25,7 +25,7 @@ RUN composer install --no-interaction --prefer-dist
 RUN php artisan migrate:fresh --seed
 
 # Expose port 8000 for the Laravel server
-EXPOSE 8000
+EXPOSE 8083
 
 # Run the Laravel server with php artisan serve
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8083"]
