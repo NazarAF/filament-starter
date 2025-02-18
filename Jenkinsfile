@@ -51,10 +51,10 @@ pipeline {
     }
 
     post {
-        always {
-            echo "Cleaning up docker containers"
-            sh 'docker system prune -f'
-        }
+        // always {
+        //     echo "Cleaning up docker containers"
+        //     sh 'docker system prune -f'
+        // }
 
         success {
             echo "Pipeline succeeded!"
