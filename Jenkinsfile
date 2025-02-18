@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d -p 8000:8000 --name laravel-container ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8000"
+                    docker run -d -p 8000:8000 --name laravel-container ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} bash -c "php artisan serve --host=0.0.0.0 --port=8083"
                     """
                 }
             }
